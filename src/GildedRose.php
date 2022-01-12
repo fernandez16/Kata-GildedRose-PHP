@@ -7,54 +7,71 @@ namespace App;
 class GildedRose
 {
 
+    private $backstagePass = "Backstage passes to a TAFKAL80ETC concert";
+    private $sulfuras = "Sulfuras, Hand of Ragnaros";
+    private $agedbrie = "Aged Brie";
+    private $conjured = "Conjured";
+
     public static function updateQuality($items)
     {
         for ($i = 0; $i < count($items); $i++) {
-            if (("Aged Brie" != $items[$i]->getName()) && ("Backstage passes to a TAFKAL80ETC concert" != $items[$i]->getName())) {
+            if (("Aged Brie" != $items[$i]->getName()) && (GildedRose::getBackstagePass() != $items[$i]->getName())) {
                 if ($items[$i]->getQuality() > 0) {
-                    if ("Sulfuras, Hand of Ragnaros" != $items[$i]->getName()) {
+                    if (GildedRose::isRagnaros($items, $i)) {
                         $items[$i]->setQuality($items[$i]->getQuality() - 1);
                     }
                 }
             } else {
-                if ($items[$i]->getQuality() < 50) {
-                    $items[$i]->setQuality($items[$i]->getQuality() + 1);
-                    if ("Backstage passes to a TAFKAL80ETC concert" == $items[$i]->getName()) {
+                if (GildedRose::qualityIsLowerThan50($items, $i)) {
+                    GildedRose::addValue($items, $i, +1);
+                    if ($backstagePass == $items[$i]->getName()) {
                         if ($items[$i]->getSellIn() < 11) {
-                            if ($items[$i]->getQuality() < 50) {
-                                $items[$i]->setQuality($items[$i]->getQuality() + 1);
+                            if (GildedRose::qualityIsLowerThan50($items, $i)) {
+                                GildedRose::addValue($items, $i, +1);
                             }
                         }
                         if ($items[$i]->getSellIn() < 6) {
-                            if ($items[$i]->getQuality() < 50) {
-                                $items[$i]->setQuality($items[$i]->getQuality() + 1);
+                            if (GildedRose::qualityIsLowerThan50($items, $i)) {
+                                GildedRose::addValue($items, $i, +1);
                             }
                         }
                     }
                 }
             }
 
-            if ("Sulfuras, Hand of Ragnaros" != $items[$i]->getName()) {
+            if (GildedRose::isRagnaros($items, $i)) {
                 $items[$i]->setSellIn($items[$i]->getSellIn() - 1);
             }
 
             if ($items[$i]->getSellIn() < 0) {
                 if ("Aged Brie" != $items[$i]->getName()) {
-                    if ("Backstage passes to a TAFKAL80ETC concert" != $items[$i]->getName()) {
+                    if ($backstagePass != $items[$i]->getName()) {
                         if ($items[$i]->getQuality() > 0) {
-                            if ("Sulfuras, Hand of Ragnaros" != $items[$i]->getName()) {
+                            if (GildedRose::isRagnaros($items, $i)) {
                                 $items[$i]->setQuality($items[$i]->getQuality() - 1);
                             }
                         }
                     } else {
-                        $items[$i]->setQuality($items[$i]->getQuality() - $items[$i]->getQuality());
+                        GildedRose::addValue($items, $i, -($items[$i]->getQuality()));
                     }
                 } else {
-                    if ($items[$i]->getQuality() < 50) {
-                        $items[$i]->setQuality($items[$i]->getQuality() + 1);
+                    if (GildedRose::qualityIsLowerThan50($items, $i)) {
+                        GildedRose::addValue($items, $i, +1);
                     }
                 }
             }
         }
+    }
+
+    public static function isRagnaros($items, $i) {
+        return ("Sulfuras, Hand of Ragnaros" != $items[$i]->getName());
+    }
+
+    public static function qualityIsLowerThan50($items, $i) {
+        return ($items[$i]->getQuality() < 50);
+    }
+
+    public static function addValue($items, $i, $valueAdded) {
+        $items[$i]->setQuality($items[$i]->getQuality("asdf") + $valueAdded);
     }
 }

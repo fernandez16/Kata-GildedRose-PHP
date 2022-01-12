@@ -26,3 +26,7 @@ Tu tarea consiste en añadir una nueva funcionalidad al sistema para que podamos
 ### Sin embargo hay dos cosas que no puedes hacer:
 
 - Cambiar el interfaz y la forma de uso de la clase GildedRose , es feo, lo sabemos, pero tenemos muchos sistemas que la utilizan y no vamos a cambiarlos todos ahora!
+
+## Run Tests
+
+- vendor/bin/phpunit or composer test
